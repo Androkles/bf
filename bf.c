@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SIZE 65536
+
 typedef char* string;
 
-char memory[65536];
+char memory[SIZE];
 int memptr = 0;
 char *program;
 
@@ -50,7 +52,6 @@ int syntaxcheck(string s) {
     } else if (c == ']') {
       count--;
     }
-
     charnum++;
 
     if (count < 0) {
@@ -68,12 +69,12 @@ int syntaxcheck(string s) {
 
 void exec (int ptr) {
   switch(program[ptr]) {
-  case '+': memory[memptr]++;           break;
-  case '-': memory[memptr]--;           break;
-  case '>': memptr++;                   break;
-  case '<': memptr--;                   break;
-  case '.': putchar(memory[memptr]);    break;
-  case ',': memory[memptr] = getchar(); break;
+  case '+': memory[memptr]++;                    break;
+  case '-': memory[memptr]--;                    break;
+  case '>': memptr = (memptr + 1) % SIZE;        break;
+  case '<': memptr = (memptr + SIZE - 1) % SIZE; break;
+  case '.': putchar(memory[memptr]);             break;
+  case ',': memory[memptr] = getchar();          break;
   default : break;
   }
 }
@@ -93,7 +94,6 @@ int loopend (int pc) {
   }
   return -1;
 }
-int repeat = 0;
 
 void loop (const int start, const int end) {
   int i, j;
