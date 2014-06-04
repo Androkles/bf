@@ -8,11 +8,8 @@ symbols = ['<', '>', ',', '.', '+', '-', '[', ']']
 
 main = do args <- getArgs;
        	  case args of
-	       	    --[infile] -> do
 	       	    [outfile, infile] -> do text <- get infile
 		    	      	      	    let outtext = compile $ filter (\x -> x `elem` symbols) text
-					    --putStrLn outtext
-					    --hFlush stdout
 					    (path, handle) <- openTempFile "." "tmp.c"
 					    hClose handle
 					    writeFile path outtext
@@ -35,8 +32,6 @@ stdtext = "#include <stdio.h>\n#include <stdlib.h>\n\n#define SIZE 65536\n\nchar
 
 compile :: String -> String
 compile intext = stdtext ++ (foldr (++) "" $ map replace intext) ++ "\n}"
---let compiled = unwords $ map replace intext
---	       	 stdtext ++ compiled ++ "}"
 
 get :: String -> IO String
 get infile = do input <- openFile infile ReadMode;
